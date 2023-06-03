@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BtL Result Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .input-field {
+      margin-bottom: 10px;
+    }
+    
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .result-table th, .result-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .result-table th {
+      background-color: #f5f5f5;
+    }
+    
+    .edit-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .save-button {
+      background-color: #008CBA;
+    }
+    
+    .cancel-button {
+      background-color: #f44336;
+    }
+    
+    .delete-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .print-button,.dataBtn {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .parent{
+        display: flex;
+        justify-content: center;
+        column-gap: 3rem;
+    }
+    @media screen and (max-width:500px) {
+        .parent{
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    /* td:nth-child(4){
+        display: none;
+    } */
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- <h1>BEYOND the LIMITS PHYSICS</h1> -->
+    <div class="parent">
+        <div class="child">
+            <img src="BtL.jpeg" alt="" style="max-width:10rem">
+        </div>
+        <div class="child" id="ch">
+            <h1>Physics Result</h1>
+        </div>
+    </div>
+    <hr>
+    
+    <div class="result-header" id="data">
+      <div class="input-field">
+        <label for="exam">Exam Title:</label>
+        <input type="text" id="exam" placeholder="Enter exam name">
+      </div>
+      <div class="input-field">
+        <label for="date">Std.:</label>
+        <input type="text" id="std" placeholder="Enter standard">
+      </div>
+      <div class="input-field">
+      <label for="date">Medium :</label>
+      <select  id="med">
+        <option value="Guj.">Gujrati</option>
+        <option value="Eng.">English</option>
+      </select>
+    </div>
+      <div class="input-field">
+        <label for="date">Exam Date:</label>
+        <input type="date" id="date">
+      </div>
+      <div class="input-field">
+        <label for="max-marks">Maximum Marks:</label>
+        <input type="number" id="max-marks" placeholder="Enter maximum marks">
+      </div>
+      <button class="dataBtn">Add Data</button>
+    </div>
+    <div class="showData">
+        <h3 id="sd1"></h3>
+        <h3 id="sd2"></h3>
+        <h3 id="sd3"></h3>
+        <h3 id="sd4"></h3>
+    </div>
+    
+    <br>
+    <div id="addRes">
+    <div class="input-field">
+      <label for="name">Student Name:</label>
+      <input type="text" id="name" placeholder="Enter student name">
+    </div>
+    <div class="input-field">
+      <label for="marks">Marks:</label>
+      <input type="number" id="marks" placeholder="Enter marks">
+    </div>
+    <button onclick="addResult()" class="dataBtn">Add Result</button>
+</div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Student Name</th>
+          <th>Score</th>
+          <th id="edith">Action</th>
+        </tr>
+      </thead>
+      <tbody id="result-body">
+        <!-- Existing results will be added dynamically here -->
+      </tbody>
+    </table>
+    <button class="print-button" onclick="printResults()" style="margin-top: 10px;">Print</button>
+  </div>
+  
+  <script>
+    dataBtn = document.querySelector(".dataBtn");
+    dataBtn.addEventListener("click", myFunction)
+
+    function myFunction() {
+  document.getElementById("sd1").innerHTML = "Exam Title: " + document.getElementById("exam").value;
+  document.getElementById("sd2").innerHTML = "Standard : " +document.getElementById("std").value +" "+ document.getElementById("med").value;
+  
+  if(document.getElementById("date").value != ""){
+    document.getElementById("sd3").innerHTML = "Exam Date: " +document.getElementById("date").value;
+  }
+  document.getElementById("sd4").innerHTML = "Maximum Marks: "+ document.getElementById("max-marks").value;
+  document.getElementById("data").style.display = "none";
+}
+    
+    var results = []; // Array to store the results
+    
+    function addResult() {
+      var nameInput = document.getElementById("name");
+      var marksInput = document.getElementById("marks");
+      var name = nameInput.value;
+      var marks = marksInput.value;
+      
+      if (name.trim() === "" || marks.trim() === "") {
+        alert("Please enter both name and marks");
+        return;
+      }
+      
+      var result = { name: name, marks: parseInt(marks), editable: false };
+      results.push(result); // Add result to the array
+      
+      nameInput.value = "";
+      marksInput.value = "";
+      
+      displayResults(); // Update the displayed results
+    }
+    
+    function displayResults() {
+      var tableBody = document.getElementById("result-body");
+      tableBody.innerHTML = ""; // Clear existing rows
+      
+      // Sort results array by marks in descending order
+      results.sort(function(a, b) {
+        return b.marks - a.marks;
+      });
+      
+      // Assign ranks based on sorted array
+      for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        
+        var newRow = tableBody.insertRow();
+        
+        var rankCell = newRow.insertCell();
+        rankCell.textContent = i + 1;
+        
+        var nameCell = newRow.insertCell();
+        if (result.editable) {
+          nameCell.innerHTML = `<input type="text" value="${result.name}" id="name-${i}">`;
+        } else {
+          nameCell.textContent = result.name;
+        }
+        
+        var marksCell = newRow.insertCell();
+        if (result.editable) {
+          marksCell.innerHTML = `<input type="number" value="${result.marks}" id="marks-${i}">`;
+        } else {
+          marksCell.textContent = result.marks;
+        }
+        
+        var actionCell = newRow.insertCell();
+        if (result.editable) {
+          actionCell.innerHTML = `
+            <button class="save-button" onclick="saveResult(${i})">Save</button>
+            <button class="cancel-button" onclick="cancelEdit(${i})">Cancel</button>
+          `;
+        } else {
+          actionCell.innerHTML = `
+            <button class="edit-button" onclick="editResult(${i})">Edit</button>
+            <button class="delete-button" onclick="deleteResult(${i})">Delete</button>
+          `;
+        }
+      }
+    }
+    
+    function editResult(index) {
+      results[index].editable = true;
+      displayResults();
+    }
+    
+    function saveResult(index) {
+      var nameInput = document.getElementById(`name-${index}`);
+      var marksInput = document.getElementById(`marks-${index}`);
+      var name = nameInput.value;
+      var marks = marksInput.value;
+      
+      if (name.trim() === "" || marks.trim() === "") {
+        alert("Please enter both name and marks");
+        return;
+      }
+      
+      results[index].name = name;
+      results[index].marks = parseInt(marks);
+      results[index].editable = false;
+      
+      displayResults();
+    }
+    
+    function cancelEdit(index) {
+      results[index].editable = false;
+      displayResults();
+    }
+    
+    function deleteResult(index) {
+      results.splice(index, 1);
+      displayResults();
+    }
+    
+  
+
+    function printResults() {
+      document.getElementById("edith").style.display="none"
+      document.getElementById("addRes").style.display="none" 
+    //   $(document).ready(function(){
+    // $("td:nth-child(4)").css("display", "none");
+    // });
+    // document.getElementsByTagName("td")[3].style.display="none"
+    // let i;
+    //         for(i=0;i<8;i+4){
+    //             document.getElementsByTagName("td")[`${3+i}`].style.display = "none"
+    //         }
+      window.print();
+    }
+  </script>
+</body>
+</html>
